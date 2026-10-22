@@ -4,6 +4,7 @@ import com.hemopulse.donor.model.Donor;
 import com.hemopulse.donor.repository.DonorRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -19,6 +20,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/donors")
+@CrossOrigin(origins = "*")
 public class DonorController {
 
     private final DonorRepository donorRepository;
@@ -41,6 +43,11 @@ public class DonorController {
 
     @PostMapping
     public ResponseEntity<Donor> createDonor(@RequestBody Donor donor) {
+        if (donor.getAge() == null) donor.setAge(25);
+        if (donor.getAvailability() == null) donor.setAvailability(true);
+        if (donor.getDonations() == null) donor.setDonations(1);
+        if (donor.getRating() == null) donor.setRating(5.0);
+
         Donor savedDonor = donorRepository.save(donor);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedDonor);
     }
@@ -55,6 +62,18 @@ public class DonorController {
                     existingDonor.setEmail(donorDetails.getEmail());
                     existingDonor.setCity(donorDetails.getCity());
                     existingDonor.setLastDonationDate(donorDetails.getLastDonationDate());
+                    if (donorDetails.getAge() != null) {
+                        existingDonor.setAge(donorDetails.getAge());
+                    }
+                    if (donorDetails.getAvailability() != null) {
+                        existingDonor.setAvailability(donorDetails.getAvailability());
+                    }
+                    if (donorDetails.getDonations() != null) {
+                        existingDonor.setDonations(donorDetails.getDonations());
+                    }
+                    if (donorDetails.getRating() != null) {
+                        existingDonor.setRating(donorDetails.getRating());
+                    }
                     Donor updatedDonor = donorRepository.save(existingDonor);
                     return ResponseEntity.ok(updatedDonor);
                 })
@@ -82,6 +101,18 @@ public class DonorController {
                     }
                     if (updates.containsKey("lastDonationDate") && updates.get("lastDonationDate") != null) {
                         existingDonor.setLastDonationDate((String) updates.get("lastDonationDate"));
+                    }
+                    if (updates.containsKey("age") && updates.get("age") != null) {
+                        existingDonor.setAge(Integer.valueOf(updates.get("age").toString()));
+                    }
+                    if (updates.containsKey("availability") && updates.get("availability") != null) {
+                        existingDonor.setAvailability(Boolean.valueOf(updates.get("availability").toString()));
+                    }
+                    if (updates.containsKey("donations") && updates.get("donations") != null) {
+                        existingDonor.setDonations(Integer.valueOf(updates.get("donations").toString()));
+                    }
+                    if (updates.containsKey("rating") && updates.get("rating") != null) {
+                        existingDonor.setRating(Double.valueOf(updates.get("rating").toString()));
                     }
 
                     Donor updatedDonor = donorRepository.save(existingDonor);

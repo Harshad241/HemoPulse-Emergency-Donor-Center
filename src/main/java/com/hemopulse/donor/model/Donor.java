@@ -33,6 +33,18 @@ public class Donor {
     @Column(nullable = false)
     private String lastDonationDate;
 
+    @Column(nullable = false)
+    private Integer age = 25;
+
+    @Column(nullable = false)
+    private Boolean availability = true;
+
+    @Column(nullable = false)
+    private Integer donations = 1;
+
+    @Column(nullable = false)
+    private Double rating = 5.0;
+
     public Donor() {
     }
 
@@ -44,6 +56,24 @@ public class Donor {
         this.email = email;
         this.city = city;
         this.lastDonationDate = lastDonationDate;
+        this.age = 25;
+        this.availability = true;
+        this.donations = 1;
+        this.rating = 5.0;
+    }
+
+    public Donor(Long id, String fullName, String bloodGroup, String phoneNumber, String email, String city, String lastDonationDate, Integer age, Boolean availability, Integer donations, Double rating) {
+        this.id = id;
+        this.fullName = fullName;
+        this.bloodGroup = bloodGroup;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+        this.city = city;
+        this.lastDonationDate = lastDonationDate;
+        this.age = age != null ? age : 25;
+        this.availability = availability != null ? availability : true;
+        this.donations = donations != null ? donations : 1;
+        this.rating = rating != null ? rating : 5.0;
     }
 
     public Long getId() {
@@ -100,5 +130,37 @@ public class Donor {
 
     public void setLastDonationDate(String lastDonationDate) {
         this.lastDonationDate = lastDonationDate;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public Boolean getAvailability() {
+        return availability;
+    }
+
+    public void setAvailability(Boolean availability) {
+        this.availability = availability;
+    }
+
+    public Integer getDonations() {
+        return donations;
+    }
+
+    public void setDonations(Integer donations) {
+        this.donations = donations;
+    }
+
+    public Double getRating() {
+        return rating;
+    }
+
+    public void setRating(Double rating) {
+        this.rating = rating;
     }
 }
