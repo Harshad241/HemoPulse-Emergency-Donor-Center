@@ -1,7 +1,9 @@
 package com.hemopulse.donor;
 
 import com.hemopulse.donor.model.Donor;
+import com.hemopulse.donor.model.EmergencyRequest;
 import com.hemopulse.donor.repository.DonorRepository;
+import com.hemopulse.donor.repository.EmergencyRequestRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -12,13 +14,16 @@ import java.util.List;
 public class DataInitializer implements CommandLineRunner {
 
     private final DonorRepository donorRepository;
+    private final EmergencyRequestRepository emergencyRequestRepository;
 
-    public DataInitializer(DonorRepository donorRepository) {
+    public DataInitializer(DonorRepository donorRepository, EmergencyRequestRepository emergencyRequestRepository) {
         this.donorRepository = donorRepository;
+        this.emergencyRequestRepository = emergencyRequestRepository;
     }
 
     @Override
     public void run(String... args) {
+        // 1. Seed Donors if empty
         if (donorRepository.count() == 0) {
             List<Donor> seedDonors = Arrays.asList(
                 new Donor(null, "Rahul Sharma", "O+", "9876543210", "rahul.sharma@example.com", "Mumbai", "15 Aug 2026", 21, true, 4, 4.8),
@@ -36,7 +41,20 @@ public class DataInitializer implements CommandLineRunner {
             );
 
             donorRepository.saveAll(seedDonors);
-            System.out.println("HemoPulse Database Initialized: " + seedDonors.size() + " donors pre-populated successfully.");
+            System.out.println("HemoPulse Database: " + seedDonors.size() + " donors pre-populated successfully.");
+        }
+
+        // 2. Seed Emergency Hospital Requirements if empty
+        if (emergencyRequestRepository.count() == 0) {
+            List<EmergencyRequest> seedRequests = Arrays.asList(
+                new EmergencyRequest(null, "O-", "City Hospital", "CRITICAL", "3 Units", "Trauma Care", "10 mins ago"),
+                new EmergencyRequest(null, "B-", "Sunrise Hospital", "URGENT", "2 Units", "Emergency ICU", "25 mins ago"),
+                new EmergencyRequest(null, "AB+", "Apex Medical Center", "HIGH PRIORITY", "4 Units", "Surgical Ward", "40 mins ago"),
+                new EmergencyRequest(null, "A-", "Metro Health Care", "URGENT", "2 Units", "Pediatric Emergency", "1 hour ago")
+            );
+
+            emergencyRequestRepository.saveAll(seedRequests);
+            System.out.println("HemoPulse Database: " + seedRequests.size() + " emergency requests pre-populated successfully.");
         }
     }
 }
